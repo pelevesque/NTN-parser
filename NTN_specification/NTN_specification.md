@@ -84,3 +84,22 @@ optionnally preceded by a ratio.
   \layout{}
   \midi{}
 }
+
+
+
+
+
+
+% LilyBin
+\score {
+  {
+    \new RhythmicStaff {
+	    \omit BarLine
+      \once \override Staff.TimeSignature #'stencil = ##f
+	  \time 5/4
+	    \tuplet 3/2 { c4 c \tuplet 3/2 { c8 r c16 c } } c4 c8 c16 c
+    }
+  }
+  \layout{}
+  \midi{}
+}
