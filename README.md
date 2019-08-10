@@ -31,9 +31,20 @@ https://www.npmjs.com/package/NTN-parser
 
 ## Usage
 
+### Requiring
+
 ```js
 const parser = require('NTN-parser')
 ```
+
+### Parameters
+
+```js
+notation (required)
+options  (optional) default = { timeOffset = 0, timeSpan = null }
+```
+
+### Basic Usage
 
 ```js
 const notation = '(fly hog (2 cat dog elk))'
