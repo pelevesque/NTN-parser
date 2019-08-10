@@ -9,7 +9,7 @@ A parser for NTN (Nested Tuplet Notation).
 NTN (Nested Tuplet Notation) is a file format for storing events in time
 using nested tuplets.
 
-NTN is the brainchild of Luc St-Louis.
+It is the brainchild of Luc St-Louis.
 
 [NTN_specification.md](NTN_specification/NTN_specification.md)
 
@@ -36,7 +36,7 @@ https://www.npmjs.com/package/NTN-parser
 ### Requiring
 
 ```js
-const parser = require('NTN-parser')
+const parse = require('NTN-parser')
 ```
 
 ### Parameters
@@ -50,7 +50,7 @@ options  (optional) default = { timeOffset = 0, timeSpan = null }
 
 ```js
 const notation = '(fly hog (2 cat dog elk))'
-const result = parser(notation)
+const result = parse(notation)
 result === [
   { time: 0,     data: "fly" },
   { time: 0.25,  data: "hog" },
@@ -69,7 +69,7 @@ Changes the notation's time offset.
 
 ```js
 const notation = '(fly hog (2 cat dog elk))'
-const result = parser(notation, { timeOffset: 2 })
+const result = parse(notation, { timeOffset: 2 })
 result === [
   { time: 2,     data: "fly" },
   { time: 2.25,  data: "hog" },
@@ -86,7 +86,7 @@ Changes the notation's time span.
 
 ```js
 const notation = '(fly hog (2 cat dog elk))'
-const result = parser(notation, { timeSpan: 5 })
+const result = parse(notation, { timeSpan: 5 })
 result === [
   { time: 0,     data: "fly" },
   { time: 1.25,  data: "hog" },
