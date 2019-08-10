@@ -17,9 +17,9 @@ An example is worth a thousand words.
 
 if `a` = note, and `.` = rest, the following encodings are similar:
 
-`((3 a a (3 a . (2 a a))) a (2 a (2 a a)))`
+1) `((3 a a (3 a . (2 a a))) a (2 a (2 a a)))`
 
-![notation example](notation.png)
+2) ![notation example](notation.png)
 
 ## Node Repository
 
