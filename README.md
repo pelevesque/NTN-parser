@@ -11,7 +11,11 @@ using nested tuplets.
 
 It is the brainchild of Luc St-Louis.
 
-[NTN_specification.md](NTN_specification/NTN_specification.md)
+## example
+
+((3 a a (3 a . (2 a a))) a (2 a (2 a a)))
+
+![notation example](notation.png)
 
 ## Node Repository
 
