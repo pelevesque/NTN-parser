@@ -15,9 +15,9 @@ It is the brainchild of Luc St-Louis.
 
 An example is worth a thousand words.
 
-if `a` = note, and `.` = rest
+if `a` = note, and `.` = rest, the following encodings are similar:
 
-`((3 a a (3 a . (2 a a))) a (2 a (2 a a)))` = music below
+`((3 a a (3 a . (2 a a))) a (2 a (2 a a)))`
 
 ![notation example](notation.png)
 
