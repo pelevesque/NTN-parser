@@ -13,9 +13,11 @@ It is the brainchild of Luc St-Louis.
 
 ## Example
 
-An example is worth a thousand words. If 'a' is a note, and '.' is a rest, the
-following line `((3 a a (3 a . (2 a a))) a (2 a (2 a a)))` contains the
-musical information below:
+An example is worth a thousand words.
+
+if `a` = note, and `.` = rest
+
+`((3 a a (3 a . (2 a a))) a (2 a (2 a a)))` = music below
 
 ![notation example](notation.png)
 
