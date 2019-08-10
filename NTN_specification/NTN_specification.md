@@ -6,16 +6,22 @@
 
 A data token is a series of one or more accepted data token characters.
 
-abcdefghijklmnopqrstuvwxyz
-ABCDEFGHIJKLMNOPQRSTUVWXYZ
-0123456789
-_ - ~ . |
+It cannot begin with a number.
 
-A data token cannot begin with a number.
+### Accepted Data Token Characters
+
+`abcdefghijklmnopqrstuvwxyz`
+`ABCDEFGHIJKLMNOPQRSTUVWXYZ`  
+`0123456789`  
+`~_-.|`  
 
 ### Example Data Tokens
 
-a ~a6_b6 x0000DEAD a.b.c.d -9.1_6.5
+a  
+~a6_b6   
+x0000DEAD   
+a.b.c.d  
+-9.1_6.5  
 
 ## Node
 
