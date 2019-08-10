@@ -2,10 +2,6 @@
 
 ## absolute
 
+(a (3 a a (3 a . a) (2 a a))
 
-![alt text](test.png)
-
-
-(As6 B4 (2 Bf6_C . Df4) E7)
-
-(2 B00109009_B00109009 )
+![alt text](example_1.png)
