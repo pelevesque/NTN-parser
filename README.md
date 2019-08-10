@@ -6,20 +6,28 @@
 
 A parser for NTN (Nested Tuplet Notation).
 
-NTN (Nested Tuplet Notation) is a file format for storing events in time
-using nested tuplets.
+NTN is a file format for storing timed events using nested tuplets.
 
-It is the brainchild of Luc St-Louis.
+Any rhythm can be created to store these events, from the very simple
+to the hyper complex.
 
-## Example
+NTN is the brainchild of Luc St-Louis.
 
-An example is worth a thousand words.
+## Example 1
 
 if `a` = note, and `.` = rest, the following encodings are similar:
 
-1) `((3 a a (3 a . (2 a a))) a (2 a (2 a a)))`
+1) `((2 a a (a . (a a))) a (a (a a)))`
 
-2) ![notation example](notation.png)
+2) ![notation example](example_1.png)
+
+## Example 2
+
+In this example, animal words are placed in time.
+
+1) `(fly (bee ant) ((fly bee) ant) bug)`
+
+2) ![notation example](example_2.png)
 
 ## Node Repository
 
@@ -57,14 +65,14 @@ options  (optional) default = { timeOffset = 0, timeSpan = null }
 ### Basic Usage
 
 ```js
-const notation = '(C4 G4 (2 F4 E4 D4))'
+const notation = '(c4 g4 (2 f4 e4 d4))'
 const result = parse(notation)
 result === [
-  { time: 0,     data: "C4" },
-  { time: 0.25,  data: "G4" },
-  { time: 0.5,   data: "F4" },
-  { time: 0.666, data: "E4" },
-  { time: 0.833, data: "D4" },
+  { time: 0,     data: "c4" },
+  { time: 0.25,  data: "g4" },
+  { time: 0.5,   data: "f4" },
+  { time: 0.666, data: "e4" },
+  { time: 0.833, data: "d4" },
   { time: 1,     data: "$" }
 ]
 ```
@@ -76,14 +84,14 @@ result === [
 Changes the notation's time offset.
 
 ```js
-const notation = '(C4 G4 (2 F4 E4 D4))'
+const notation = '(c4 g4 (2 f4 e4 d4))'
 const result = parse(notation, { timeOffset: 2 })
 result === [
-  { time: 2,     data: "C4" },
-  { time: 2.25,  data: "G4" },
-  { time: 2.5,   data: "F4" },
-  { time: 2.666, data: "E4" },
-  { time: 2.833, data: "D4" },
+  { time: 2,     data: "c4" },
+  { time: 2.25,  data: "g4" },
+  { time: 2.5,   data: "f4" },
+  { time: 2.666, data: "e4" },
+  { time: 2.833, data: "d4" },
   { time: 3,     data: "$" }
 ```
 
