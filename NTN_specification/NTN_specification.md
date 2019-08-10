@@ -3,7 +3,7 @@
 ## absolute
 
 
-![alt text](/test.png)
+![alt text](test.png)
 
 
 (As6 B4 (2 Bf6_C . Df4) E7)
