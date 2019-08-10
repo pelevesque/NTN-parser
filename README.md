@@ -49,14 +49,14 @@ options  (optional) default = { timeOffset = 0, timeSpan = null }
 ### Basic Usage
 
 ```js
-const notation = '(fly hog (2 cat dog elk))'
+const notation = '(C4 G4 (2 F4 E4 D4))'
 const result = parse(notation)
 result === [
-  { time: 0,     data: "fly" },
-  { time: 0.25,  data: "hog" },
-  { time: 0.5,   data: "cat" },
-  { time: 0.666, data: "dog" },
-  { time: 0.833, data: "elk" },
+  { time: 0,     data: "C4" },
+  { time: 0.25,  data: "G4" },
+  { time: 0.5,   data: "F4" },
+  { time: 0.666, data: "E4" },
+  { time: 0.833, data: "D4" },
   { time: 1,     data: "$" }
 ]
 ```
@@ -68,16 +68,15 @@ result === [
 Changes the notation's time offset.
 
 ```js
-const notation = '(fly hog (2 cat dog elk))'
+const notation = '(C4 G4 (2 F4 E4 D4))'
 const result = parse(notation, { timeOffset: 2 })
 result === [
-  { time: 2,     data: "fly" },
-  { time: 2.25,  data: "hog" },
-  { time: 2.5,   data: "cat" },
-  { time: 2.666, data: "dog" },
-  { time: 2.833, data: "elk" },
+  { time: 2,     data: "C4" },
+  { time: 2.25,  data: "G4" },
+  { time: 2.5,   data: "F4" },
+  { time: 2.666, data: "E4" },
+  { time: 2.833, data: "D4" },
   { time: 3,     data: "$" }
-]
 ```
 
 #### timeSpan

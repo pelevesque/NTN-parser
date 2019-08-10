@@ -9,7 +9,7 @@ const NODE_DELIMITERS_NAME = 'parentheses'
 const RATIO_NUMBERS_SEPARATOR = ':'
 const EVENTS_TERMINATOR = '$'
 const RATIO_TOKEN_VALIDATION_REGEX = '[1-9]+[0-9]*(\\.[0-9]+)?(:[1-9]+[0-9]*(\\.[0-9]+)?)?'
-const DATA_TOKEN_VALIDATION_REGEX = '[a-zA-Z_]+[a-zA-Z0-9_]*'
+const DATA_TOKEN_VALIDATION_REGEX = '[a-zA-Z_~\\-\\.\\|]+[0-9a-zA-Z_~\\-\\.\\|]*'
 
 function validateRootNodeDelimiters (notation) {
   if (
@@ -57,14 +57,14 @@ function parse (notation, timeOffset, timeSpan) {
       const char = notation.charAt(n)
       if (char === NODE_START_DELIMITER) {
         depth++
-        if (depth > deepestNodeDepth) deepestNodeDepth = depth
+        if (depth > deepestNodeDepth) {
+          deepestNodeDepth = depth
+        }
         nodes.push({ depth: depth, startIndex: n + 1 })
       } else if (char === NODE_END_DELIMITER) {
         const i = findHighestNodeIndexForGivenDepth(depth)
         nodes[i].endIndex = n - 1
-        nodes[i].content = notation.substring(
-          nodes[i].startIndex, nodes[i].endIndex + 1
-        )
+        nodes[i].content = notation.substring(nodes[i].startIndex, nodes[i].endIndex + 1)
         depth--
       }
     }
@@ -100,8 +100,12 @@ function parse (notation, timeOffset, timeSpan) {
             data = ''
           }
         }
-        if (depth === 0) data += char
-        if (char === NODE_END_DELIMITER) depth--
+        if (depth === 0) {
+          data += char
+        }
+        if (char === NODE_END_DELIMITER) {
+          depth--
+        }
       }
       nodes[i].data.push(tokenizeData(data))
     }
@@ -314,7 +318,9 @@ function parse (notation, timeOffset, timeSpan) {
           renderNodeEventsOfNextDataChunk(i)
           nextTargetDepth--
         }
-        if (nodes[i].depth === finalTargetDepth) break
+        if (nodes[i].depth === finalTargetDepth) {
+          break
+        }
       }
     }
 
@@ -360,7 +366,9 @@ function parse (notation, timeOffset, timeSpan) {
 
     renderNodeEvents()
     addEventsTerminator()
-    if (timeSpan !== null) changeNotationTimeSpan()
+    if (timeSpan !== null) {
+      changeNotationTimeSpan()
+    }
   }
 
   findNodes()

@@ -206,15 +206,17 @@ describe('#parse()', () => {
 
     it('should work with all the allowed data token characters', () => {
       const notation = `(
+        -0123456789
         abcdefghijklmnopqrstuvwxyz
         ABCDEFGHIJKLMNOPQRSTUVWXYZ
-        _0_1_2_3_4_5_6_7_8_9
+        _~-.|
       )`
       const result = parse(notation)
       const expected = [
-        { time: 0, data: 'abcdefghijklmnopqrstuvwxyz' },
-        { time: 0.3333333333333333, data: 'ABCDEFGHIJKLMNOPQRSTUVWXYZ' },
-        { time: 0.6666666666666666, data: '_0_1_2_3_4_5_6_7_8_9' },
+        { time: 0, data: '-0123456789' },
+        { time: 0.25, data: 'abcdefghijklmnopqrstuvwxyz' },
+        { time: 0.5, data: 'ABCDEFGHIJKLMNOPQRSTUVWXYZ' },
+        { time: 0.75, data: '_~-.|' },
         { time: 1, data: '$' }
       ]
       expect(JSON.stringify(result)).to.equal(JSON.stringify(expected))
