@@ -7,7 +7,9 @@
 A parser for NTN (Nested Tuplet Notation).
 
 NTN (Nested Tuplet Notation) is a file format for storing events in time
-using nested tuplets. NTN is the brainchild of Luc St-Louis.
+using nested tuplets.
+
+NTN is the brainchild of Luc St-Louis.
 
 [NTN_specification.md](NTN_specification/NTN_specification.md)
 
