@@ -1,0 +1,38 @@
+{
+  "name": "@pelevesque/NTN-parser",
+  "version": "0.0.1",
+  "description": "A parser for NTN (Nested Tuplet Notation).",
+  "main": "index.js",
+  "engines": {
+    "node": ">=6.4.0"
+  },
+  "scripts": {
+    "test": "standard && mocha --reporter spec",
+    "cover": "node_modules/istanbul/lib/cli.js cover node_modules/mocha/bin/_mocha -- -R spec test/*"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/pelevesque/NTN-parser.git"
+  },
+  "keywords": [],
+  "author": "Pierre-Emmanuel Lévesque <pierre.e.levesque@gmail.com>",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/pelevesque/NTN-parser/issues"
+  },
+  "homepage": "https://github.com/pelevesque/NTN-parser#readme",
+  "directories": {
+    "test": "test"
+  },
+  "devDependencies": {
+    "chai": "^4.2.0",
+    "coveralls": "^3.0.6",
+    "istanbul": "^0.4.5",
+    "mocha": "^6.1.4",
+    "standard": "^13.0.2"
+  },
+  "dependencies": {
+    "@pelevesque/scale-number": "^0.0.6",
+    "is-balanced": "^1.0.2"
+  }
+}
