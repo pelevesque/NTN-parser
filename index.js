@@ -9,7 +9,7 @@ const NODE_DELIMITERS_NAME = 'parentheses'
 const RATIO_NUMBERS_SEPARATOR = ':'
 const EVENTS_TERMINATOR = '$'
 const RATIO_TOKEN_VALIDATION_REGEX = '[1-9]+[0-9]*(\\.[0-9]+)?(:[1-9]+[0-9]*(\\.[0-9]+)?)?'
-const DATA_TOKEN_VALIDATION_REGEX = '[a-zA-Z_~\\-\\.\\|]+[0-9a-zA-Z_~\\-\\.\\|]*'
+const DATA_TOKEN_VALIDATION_REGEX = '[a-zA-Z_\\-\\.]+[0-9a-zA-Z_\\-\\.]*'
 
 function validateRootNodeDelimiters (notation) {
   if (
@@ -379,7 +379,9 @@ function parse (notation, timeOffset, timeSpan) {
 }
 
 module.exports = (notation, { timeOffset = 0, timeSpan = null } = {}) => {
-  if (notation === '') throw new Error('The notation is empty.')
+  if (notation === '') {
+    throw new Error('The notation is empty.')
+  }
   validateRootNodeDelimiters(notation)
   validateDescendantNodeDelimiters(notation)
   return parse(notation, timeOffset, timeSpan)

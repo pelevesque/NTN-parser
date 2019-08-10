@@ -1,5 +1,18 @@
 # NTN Specification
 
+## Version
+
+v1.0 (2019-08-10)
+
+## About NTN
+
+Nested Tuplet Notation consists of placing data tokens at different time intervals
+using nested tuplets. Any rhythm is possible, from the simplest to the most complex.
+
+## Notation Description
+
+
+
 
 
 ## Data Token
@@ -10,28 +23,41 @@ It cannot begin with a number.
 
 ### Accepted Data Token Characters
 
-`abcdefghijklmnopqrstuvwxyz`
+`abcdefghijklmnopqrstuvwxyz`  
 `ABCDEFGHIJKLMNOPQRSTUVWXYZ`  
 `0123456789`  
-`~_-.|`  
+`_-.`  
 
 ### Example Data Tokens
 
-a  
-~a6_b6   
-x0000DEAD   
-a.b.c.d  
--9.1_6.5  
+`a`  
+`a6b6`   
+`x0000DEAD`   
+`a.b.c.d`  
+`-9.1_6.5`  
+
+## Ratio
+
+A ratio
+
+
+
+
+
+
 
 ## Node
 
-A node is he building block of Nested Tuplet Notation.
-
-A series of whitespace separated data tokens.
-
+A node is a series of whitespace separated data tokens encapsulated by parentheses
+optionnally preceded by a ratio.
 
 (a a a a)
 
+### Example Nodes
+
+`(a a a a)`
+`(a b c d)`
+`(fly b6 x0000DEAD .)`
 
 
 ## absolute
@@ -42,6 +68,8 @@ A series of whitespace separated data tokens.
 
 ## Ratio
 
+
+## Putting it all together
 
 
 % LilyBin

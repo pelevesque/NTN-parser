@@ -209,14 +209,14 @@ describe('#parse()', () => {
         -0123456789
         abcdefghijklmnopqrstuvwxyz
         ABCDEFGHIJKLMNOPQRSTUVWXYZ
-        _~-.|
+        _-.
       )`
       const result = parse(notation)
       const expected = [
         { time: 0, data: '-0123456789' },
         { time: 0.25, data: 'abcdefghijklmnopqrstuvwxyz' },
         { time: 0.5, data: 'ABCDEFGHIJKLMNOPQRSTUVWXYZ' },
-        { time: 0.75, data: '_~-.|' },
+        { time: 0.75, data: '_-.' },
         { time: 1, data: '$' }
       ]
       expect(JSON.stringify(result)).to.equal(JSON.stringify(expected))
