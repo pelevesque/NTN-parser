@@ -25,7 +25,7 @@ In this example, animal words are placed in time.
 
 In this example, animal words are placed in time.
 
-1) `()`
+1) `((4   (2)     (2 . )              ) (a a))`
 
 2) ![notation example](examples/example_2.png)
 

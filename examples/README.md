@@ -21,7 +21,7 @@
   {
     \new RhythmicStaff {
 	    \time 5/4
-	    \tuplet 5/4 { c4 \tuplet 2/3 { c \tuplet 3/2 { c8 c c } } r c } c c
+	    \tuplet 5/4 { c4 \tuplet 2/3 { c \tuplet 3/2 { c8 r c } } r c } c c
     }
   }
   \layout{}
