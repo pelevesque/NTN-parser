@@ -13,6 +13,10 @@ to the hyper complex.
 
 NTN is the brainchild of Luc St-Louis.
 
+This parser implements NTN-specification v1.0
+
+[NTN specification](https://github.com/pelevesque/NTN-specificatioon)
+
 ## Example 1
 
 In this example, animal words are placed in time.
@@ -23,7 +27,10 @@ In this example, animal words are placed in time.
 
 ## Example 2
 
-In this example, animal words are placed in time.
+Complex nesting like in the New Complexity style.
+
+`a` = notes  
+`.` = rests  
 
 1) `((4 a (3 a (a . a)) (. a)) (a a))`
 
