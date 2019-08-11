@@ -32,6 +32,14 @@ In this example, animal words are placed in time.
 
 2) ![notation example](examples/example_1.png)
 
+
+In this example, animal words are placed in time.
+
+1) `(fly (bee ant) ((fly bee) ant) bug)`
+
+2) ![notation example](examples/example_3.png)
+
+
 ## Example 3
 
 In this example, animal words are placed in time.
