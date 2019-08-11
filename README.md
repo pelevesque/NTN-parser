@@ -13,6 +13,9 @@ to the hyper complex.
 
 NTN is the brainchild of Luc St-Louis.
 
+2) ![notation example](example_1.png)
+
+
 ## Example 1
 
 if `a` = note, and `.` = rest, the following encodings are similar:
@@ -27,7 +30,7 @@ In this example, animal words are placed in time.
 
 1) `(fly (bee ant) ((fly bee) ant) bug)`
 
-2) ![notation example](example_2.png)
+2) ![notation example](examples/example_1.png)
 
 ## Example 3
 
