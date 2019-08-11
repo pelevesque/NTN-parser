@@ -13,8 +13,6 @@ to the hyper complex.
 
 NTN is the brainchild of Luc St-Louis.
 
-2) ![notation example](example_1.png)
-
 ## Example 1
 
 In this example, animal words are placed in time.
