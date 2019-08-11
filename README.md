@@ -37,6 +37,14 @@ In this example, animal words are placed in time.
 
 2) ![notation example](example_3.png)
 
+## Example 4
+
+In this example, animal words are placed in time.
+
+1) `()`
+
+2) ![notation example](example_4.png)
+
 ## Node Repository
 
 https://www.npmjs.com/package/NTN-parser
