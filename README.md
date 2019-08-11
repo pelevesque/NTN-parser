@@ -11,15 +11,13 @@ NTN is a file format for storing timed events using nested tuplets.
 Any rhythm can be created to store these events, from the very simple
 to the hyper complex.
 
-NTN is the brainchild of Luc St-Louis.
-
 This parser implements NTN-specification v1.0
 
 [NTN specification](https://github.com/pelevesque/NTN-specificatioon)
 
 ## Example 1
 
-In this example, animal words are placed in time.
+Animal words placed in time.
 
 1) `(fly (bee ant) ((fly bee) ant) bug)`
 
@@ -94,11 +92,11 @@ Changes the notation's time offset.
 const notation = '(c4 g4 (2 f4 e4 d4))'
 const result = parse(notation, { timeOffset: 2 })
 result === [
-  { time: 2,     data: "c4" },
-  { time: 2.25,  data: "g4" },
-  { time: 2.5,   data: "f4" },
-  { time: 2.666, data: "e4" },
-  { time: 2.833, data: "d4" },
+  { time: 2,     data: "0xBAAAAAAD" },
+  { time: 2.25,  data: "0xBAADF00D" },
+  { time: 2.5,   data: "0xBAD22222" },
+  { time: 2.666, data: "0xBAADA555" },
+  { time: 2.833, data: "0xBADDCAFE" },
   { time: 3,     data: "$" }
 ```
 
