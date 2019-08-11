@@ -15,16 +15,7 @@ NTN is the brainchild of Luc St-Louis.
 
 2) ![notation example](example_1.png)
 
-
 ## Example 1
-
-if `a` = note, and `.` = rest, the following encodings are similar:
-
-1) `((2 a a (a . (a a))) a (a (a a)))`
-
-2) ![notation example](example_1.png)
-
-## Example 2
 
 In this example, animal words are placed in time.
 
@@ -32,29 +23,19 @@ In this example, animal words are placed in time.
 
 2) ![notation example](examples/example_1.png)
 
-
-In this example, animal words are placed in time.
-
-1) `(fly (bee ant) ((fly bee) ant) bug)`
-
-2) ![notation example](examples/example_3.png)
-
-
-## Example 3
+## Example 2
 
 In this example, animal words are placed in time.
 
 1) `()`
 
-2) ![notation example](example_3.png)
+2) ![notation example](examples/example_2.png)
 
-## Example 4
 
-In this example, animal words are placed in time.
 
-1) `((2 a (2 a a a a a)) a)`
 
-2) ![notation example](example_4.png)
+
+
 
 ## Node Repository
 

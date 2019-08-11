@@ -55,12 +55,12 @@ describe('#parse()', () => {
 
     it('should throw an error when the ratio numerator does not match the number of data tokens', () => {
       const notations = [
-        { index: 1, numTokensChecked: 5, numTokens: 4, notation: '(5:1 a b c d)' },
-        { index: 8, numTokensChecked: 3, numTokens: 4, notation: '(a a a (3:1 a a a a))' }
+        { index: 1, numTokensToMatch: 5, numTokens: 4, notation: '(5:1 a b c d)' },
+        { index: 8, numTokensToMatch: 3, numTokens: 4, notation: '(a a a (3:1 a a a a))' }
       ]
       notations.forEach((e) => {
         expect(f(e.notation)).to.throw('The notation ratio numerator at index ' +
-          e.index + ' checks for ' + e.numTokensChecked + ' data tokens, but ' +
+          e.index + ' checks for ' + e.numTokensToMatch + ' data tokens, but ' +
           e.numTokens + ' were found.')
       })
     })
