@@ -28,24 +28,34 @@ describe('#parse()', () => {
 
     it('should throw an error when the ratio is malformed', () => {
       const notations = [
-        { index: 1, notation: '(05 a b c d)' },
-        { index: 1, notation: '(05:1 a b c d)' },
-        { index: 1, notation: '(5:01 a b c d)' },
-        { index: 1, notation: '(5,1 a b c d)' },
-        { index: 8, notation: '(a a a (3:a1 a a a a))' }
+        { index: 1, ratio: '01', notation: '(01)' },
+        { index: 1, ratio: '01:0', notation: '(01:0)' },
+        { index: 1, ratio: '01:0.1', notation: '(01:0.1)' },
+        { index: 1, ratio: '0:01', notation: '(0:01)' },
+        { index: 1, ratio: '0a', notation: '(0a)' },
+        { index: 1, ratio: '0,1', notation: '(0,1)' },
+        { index: 4, ratio: '1:a1', notation: '(a (1:a1))' }
       ]
       notations.forEach((e) => {
-        expect(f(e.notation)).to.throw('The notation ratio at index ' +
-          e.index + ' is malformed.')
+        expect(f(e.notation)).to.throw(`The notation ratio '` + e.ratio +
+          `' at index ` + e.index + ' is malformed.')
       })
     })
 
     it('should throw an error when a data token contains illegal characters', () => {
       const notations = [
-        { token: '0', notation: '(a 0 c d)' },
-        { token: '0b', notation: '(a 0b c d)' },
-        { token: ':', notation: '(a : c d)' },
-        { token: 'b:', notation: '(a0 b: c d)' }
+        { token: '0', notation: '(a 0)' },
+        { token: '1', notation: '(a 1)' },
+        { token: '2', notation: '(a 2)' },
+        { token: '3', notation: '(a 3)' },
+        { token: '4', notation: '(a 4)' },
+        { token: '5', notation: '(a 5)' },
+        { token: '6', notation: '(a 6)' },
+        { token: '7', notation: '(a 7)' },
+        { token: '8', notation: '(a 8)' },
+        { token: '9', notation: '(a 9)' },
+        { token: ':', notation: '(a :)' },
+        { token: '$', notation: '(a $)' }
       ]
       notations.forEach((e) => {
         expect(f(e.notation)).to.throw(`The notation data token '` +
@@ -56,6 +66,9 @@ describe('#parse()', () => {
     it('should throw an error when the ratio numerator does not match the number of data tokens', () => {
       const notations = [
         { index: 1, numTokensToMatch: 5, numTokens: 4, notation: '(5:1 a b c d)' },
+        { index: 1, numTokensToMatch: 0, numTokens: 1, notation: '(0:1 a)' },
+        { index: 1, numTokensToMatch: 1.5, numTokens: 1, notation: '(1.5:1 a)' },
+        { index: 1, numTokensToMatch: 1.5, numTokens: 0.5, notation: '(1.5:1 (0.5 a))' },
         { index: 8, numTokensToMatch: 3, numTokens: 4, notation: '(a a a (3:1 a a a a))' }
       ]
       notations.forEach((e) => {
@@ -100,14 +113,18 @@ describe('#parse()', () => {
     })
 
     it('should work with wild spacing', () => {
-      const notation = `(a  b     c
-         d)`
+      const notation = `
+        (    a  b     (
+        c       d)
+         e  )
+         `
       const result = parse(notation)
       const expected = [
         { time: 0, data: 'a' },
         { time: 0.25, data: 'b' },
         { time: 0.5, data: 'c' },
-        { time: 0.75, data: 'd' },
+        { time: 0.625, data: 'd' },
+        { time: 0.75, data: 'e' },
         { time: 1, data: '$' }
       ]
       expect(JSON.stringify(result)).to.equal(JSON.stringify(expected))
@@ -206,17 +223,26 @@ describe('#parse()', () => {
 
     it('should work with all the allowed data token characters', () => {
       const notation = `(
-        -0123456789
+        _0123456789
         abcdefghijklmnopqrstuvwxyz
         ABCDEFGHIJKLMNOPQRSTUVWXYZ
         _-.
       )`
       const result = parse(notation)
       const expected = [
-        { time: 0, data: '-0123456789' },
+        { time: 0, data: '_0123456789' },
         { time: 0.25, data: 'abcdefghijklmnopqrstuvwxyz' },
         { time: 0.5, data: 'ABCDEFGHIJKLMNOPQRSTUVWXYZ' },
         { time: 0.75, data: '_-.' },
+        { time: 1, data: '$' }
+      ]
+      expect(JSON.stringify(result)).to.equal(JSON.stringify(expected))
+    })
+
+    it('should work with all the allowed leading zero ratio', () => {
+      const notation = '(1.75:1 a (0.75:1 (0.5 a) (0.25) (0 a) (0)) (0:1) a)'
+      const result = parse(notation)
+      const expected = [
         { time: 1, data: '$' }
       ]
       expect(JSON.stringify(result)).to.equal(JSON.stringify(expected))
