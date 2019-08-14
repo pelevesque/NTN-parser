@@ -1,5 +1,6 @@
 # Example 1
 
+```
 % LilyBin
 \score {
   {
@@ -13,9 +14,11 @@
   }
   \layout{}
 }
+```
 
 # Example 2
 
+```
 % LilyBin
 \score {
   {
@@ -26,3 +29,4 @@
   }
   \layout{}
 }
+```
