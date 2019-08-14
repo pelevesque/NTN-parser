@@ -9,19 +9,11 @@ const NODE_DELIMITERS_NAME = 'parentheses'
 const RATIO_NUMBERS_SEPARATOR = ':'
 const EVENTS_TERMINATOR = '$'
 const DATA_TOKEN_VALIDATION_REGEX = '[a-zA-Z_\\.\\-][0-9a-zA-Z_\\.\\-]*'
-const RATIO_TOKEN_VALIDATION_REGEX = '(0|[1-9][0-9]*)(\\.[0-9]+)?(:(0|[1-9][0-9]*)(\\.[0-9]+)?)?'
-const LABEL_VALIDATION_REGEX = '#[a-z]+'
+const RATIO_TOKEN_VALIDATION_REGEX = '(0|[1-9][0-9]*)(\\.[0-9]+)?(:(0|[1-9][0-9]*)(\\.[0-9]+)?)?' // This permits .000000 (should we force a number > 0 at the end...)
+const LABEL_PREFIX = '#'
+const LABEL_VALIDATION_REGEX = LABEL_PREFIX + '[a-z]+'
 
 const cleanWhitespaces = str => str.replace(/\s\s+/g, ' ').trim()
-
-function validateRootNodeDelimiters (notation) {
-  if (
-    notation.charAt(0) !== NODE_START_DELIMITER ||
-    notation.charAt(notation.length - 1) !== NODE_END_DELIMITER
-  ) {
-    throw new Error('The notation must be encapsulated by ' + NODE_DELIMITERS_NAME + '.')
-  }
-}
 
 function validateDescendantNodeDelimiters (notation) {
   if (!areDelimitersBalanced(
@@ -387,22 +379,61 @@ function parse (notation, timeOffset, timeSpan) {
   return events
 }
 
+// -----------------------------------------------------------------------------
+// -----------------------------------------------------------------------------
+// -----------------------------------------------------------------------------
 function preprocess (notation) {
-  console.log(notation)
-  const expressions = []
-  let expression = ''
+  function validateLabel (label, index) {
+    const regex = new RegExp('^' + LABEL_VALIDATION_REGEX + '\\s$')
+    if (!regex.test(label + ' ')) {
+      throw new Error(`The notation label '` + label +
+        `' at index ` + index + ' is malformed.')
+    }
+  }
+  function validateLabelOrder () {
+    for (let i = 0; i < tokens.length - 1; i++) {
+      if (tokens[i].type === 'label' && tokens[i + 1].type !== 'node') {
+        throw new Error(`The notation label '` + tokens[i].token +
+          `' at index ` + tokens[i].startIndex + ' must be followed by a node.')
+      }
+    }
+  }
+  // maybe we could do a split
+  // this code is super dirty and should be way better
+  const tokens = []
+  let token = ''
   let depth = 0
   let startIndex, endIndex
   for (let i = 0; i < notation.length; i++) {
     const char = notation.charAt(i)
+    if (depth === 0) {
+      if (char !== ' ' && char !== '(') {
+        if (token.length === 0) {
+          startIndex = i
+        }
+        token += char
+      }
+      if (char === ' ' && token.length > 0) {
+        endIndex = i - 1
+        validateLabel(token, startIndex)
+        const obj = {
+          startIndex: startIndex,
+          endIndex: endIndex,
+          type: 'label',
+          token: token
+        }
+        tokens.push(obj)
+        token = ''
+      }
+    }
     if (char === '(') {
       depth++
       if (depth === 1) {
         startIndex = i
       }
     }
-    if (depth === 1) {
-      expression += char
+    if (depth >= 1) {
+      token += char
     }
     if (char === ')') {
       depth--
@@ -411,24 +442,73 @@ function preprocess (notation) {
         const obj = {
           startIndex: startIndex,
           endIndex: endIndex,
-          expression: expression
+          type: 'node',
+          token: token
         }
-        expressions.push(obj)
-        expression = ''
+        tokens.push(obj)
+        token = ''
       }
     }
   }
-  console.log(expressions)
-  throw Error('die')
+  validateLabelOrder()
+
+  function validateRepeatedLabels () {
+    for (let i = 0; i < tokens.length - 1; i++) {
+      if (tokens[i].type === 'label') {
+        for (let j = i + 1; j < tokens.length - 1; j++) {
+          if (tokens[i].token.localeCompare(tokens[j].token) === 0) {
+            throw new Error(`The notation label '` + tokens[i].token +
+              `' is defined multiple times.`)
+          }
+        }
+      }
+    }
+  }
+  validateRepeatedLabels()
+
+  function validateLabelInNode (label) {
+    const regex = new RegExp('^' + LABEL_VALIDATION_REGEX + '\\s$')
+    if (!regex.test(label + ' ')) {
+      throw new Error(`The notation label '` + label + `' is malformed.`)
+    }
+  }
+
+  for (let i = tokens.length - 1; i >= 0; i--) {
+    if (tokens[i].type === 'node') {
+      const regex = /(?<=\s)#[^\(\)\s]*/g // regex for a label put somewhere else
+      const token = tokens[i].token
+      const matches = tokens[i].token.match(regex)
+      if (matches) {
+        for (let j = 0; j < matches.length; j++) {
+          validateLabelInNode(matches[j])
+          let index = null
+          for (let k = 0; k < tokens.length - 1; k++) {
+            if (tokens[k].token.localeCompare(matches[j]) === 0) {
+              index = k + 1
+            }
+          }
+          if (index === null) {
+            throw Error(`The notation label '` + matches[j] + `' is not defined.`)
+          } else {
+            tokens[i].token = tokens[i].token.replace(matches[j], tokens[index].token)
+          }
+        }
+      }
+    }
+  }
+
+  return (tokens.length > 0) ? tokens[0].token : notation
 }
+// -----------------------------------------------------------------------------
+// -----------------------------------------------------------------------------
+// -----------------------------------------------------------------------------
 
 module.exports = (notation, { timeOffset = 0, timeSpan = null } = {}) => {
   if (notation === '') {
     throw new Error('The notation is empty.')
   }
   notation = cleanWhitespaces(notation)
+  validateDescendantNodeDelimiters('(' + notation + ')') // need my own custom function that says where there is a mistake
   notation = preprocess(notation)
-  validateRootNodeDelimiters(notation)
-  validateDescendantNodeDelimiters(notation)
   return parse(notation, timeOffset, timeSpan)
 }
