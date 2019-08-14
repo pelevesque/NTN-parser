@@ -239,10 +239,62 @@ describe('#parse()', () => {
       expect(JSON.stringify(result)).to.equal(JSON.stringify(expected))
     })
 
-    it('should work with all the allowed leading zero ratio', () => {
-      const notation = '(1.75:1 a (0.75:1 (0.5 a) (0.25) (0 a) (0)) (0:1) a)'
+    it('-A', () => {
+      const notation = '((0 a))'
       const result = parse(notation)
       const expected = [
+        { time: 1, data: '$' }
+      ]
+      expect(JSON.stringify(result)).to.equal(JSON.stringify(expected))
+    })
+
+    it('-B', () => {
+      const notation = '((0))'
+      const result = parse(notation)
+      const expected = [
+        { time: 1, data: '$' }
+      ]
+      expect(JSON.stringify(result)).to.equal(JSON.stringify(expected))
+    })
+
+    it('-C', () => {
+      const notation = '(a (0:1) b)'
+      const result = parse(notation)
+      const expected = [
+        { time: 0, data: 'a' },
+        { time: 0.6666666666666666, data: 'b' },
+        { time: 1, data: '$' }
+      ]
+      expect(JSON.stringify(result)).to.equal(JSON.stringify(expected))
+    })
+
+    it('-D', () => {
+      const notation = '((0.25))'
+      const result = parse(notation)
+      const expected = [
+        { time: 1, data: '$' }
+      ]
+      expect(JSON.stringify(result)).to.equal(JSON.stringify(expected))
+    })
+
+    it('-E', () => {
+      const notation = '(2.25:1 a (0.25) b)'
+      const result = parse(notation)
+      const expected = [
+        { time: 0, data: 'a' },
+        { time: 0.5555555555555556, data: 'b' },
+        { time: 1, data: '$' }
+      ]
+      expect(JSON.stringify(result)).to.equal(JSON.stringify(expected))
+    })
+
+    it('should work with all the allowed leading zero ratio', () => {
+      const notation = '(3.75:1 a (0.75:0.75 (0.5 b) (0.25) (0 c) (0)) (0:1) d)'
+      const result = parse(notation)
+      const expected = [
+        { time: 0, data: 'a' },
+        { time: 0.26666666666666666, data: 'b' },
+        { time: 0.7333333333333334, data: 'd' },
         { time: 1, data: '$' }
       ]
       expect(JSON.stringify(result)).to.equal(JSON.stringify(expected))

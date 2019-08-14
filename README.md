@@ -73,12 +73,12 @@ options  (optional) default = { timeOffset = 0, timeSpan = null }
 const notation = '(c4 g4 (2 f4 e4 d4))'
 const result = parse(notation)
 result === [
-  { time: 0,     data: "c4" },
-  { time: 0.25,  data: "g4" },
-  { time: 0.5,   data: "f4" },
-  { time: 0.666, data: "e4" },
-  { time: 0.833, data: "d4" },
-  { time: 1,     data: "$" }
+  { time: 0,     data: 'c4' },
+  { time: 0.25,  data: 'g4' },
+  { time: 0.5,   data: 'f4' },
+  { time: 0.666, data: 'e4' },
+  { time: 0.833, data: 'd4' },
+  { time: 1,     data: '$' }
 ]
 ```
 
@@ -89,14 +89,14 @@ result === [
 Changes the notation's time offset.
 
 ```js
-const notation = '(c4 g4 (2 f4 e4 d4))'
+const notation = '(_0xDEADBEEF _0xDEADC0DE (2 _0xDEADDEAD _0xDEADFA11 _0xDEADFEED))'
 const result = parse(notation, { timeOffset: 2 })
 result === [
-  { time: 2,     data: "0xBAAAAAAD" },
-  { time: 2.25,  data: "0xBAADF00D" },
-  { time: 2.5,   data: "0xBAD22222" },
-  { time: 2.666, data: "0xBAADA555" },
-  { time: 2.833, data: "0xBADDCAFE" },
+  { time: 2,     data: '_0xDEADBEEF' },
+  { time: 2.25,  data: '_0xDEADC0DE' },
+  { time: 2.5,   data: '_0xDEADDEAD' },
+  { time: 2.666, data: '_0xDEADFA11' },
+  { time: 2.833, data: '_0xDEADFEED' },
   { time: 3,     data: "$" }
 ```
 
@@ -105,14 +105,14 @@ result === [
 Changes the notation's time span.
 
 ```js
-const notation = '(fly hog (2 cat dog elk))'
+const notation = '(cow elk (2 ram doe pig))'
 const result = parse(notation, { timeSpan: 5 })
 result === [
-  { time: 0,     data: "fly" },
-  { time: 1.25,  data: "hog" },
-  { time: 2.5,   data: "cat" },
-  { time: 3.333, data: "dog" },
-  { time: 4.166, data: "elk" },
-  { time: 5,     data: "$" }
+  { time: 0,     data: 'cow' },
+  { time: 1.25,  data: 'elk' },
+  { time: 2.5,   data: 'ram' },
+  { time: 3.333, data: 'doe' },
+  { time: 4.166, data: 'pig' },
+  { time: 5,     data: '$' }
 ]
 ```

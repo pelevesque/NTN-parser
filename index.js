@@ -8,8 +8,10 @@ const NODE_END_DELIMITER = ')'
 const NODE_DELIMITERS_NAME = 'parentheses'
 const RATIO_NUMBERS_SEPARATOR = ':'
 const EVENTS_TERMINATOR = '$'
-const RATIO_TOKEN_VALIDATION_REGEX = '[1-9]+[0-9]*(\\.[0-9]+)?(:[1-9]+[0-9]*(\\.[0-9]+)?)?'
-const DATA_TOKEN_VALIDATION_REGEX = '[a-zA-Z_\\-\\.]+[0-9a-zA-Z_\\-\\.]*'
+const DATA_TOKEN_VALIDATION_REGEX = '[a-zA-Z_\\.\\-][0-9a-zA-Z_\\.\\-]*'
+const RATIO_TOKEN_VALIDATION_REGEX = '(0|[1-9][0-9]*)(\\.[0-9]+)?(:(0|[1-9][0-9]*)(\\.[0-9]+)?)?'
+
+const cleanWhitespaces = str => str.replace(/\s\s+/g, ' ').trim()
 
 function validateRootNodeDelimiters (notation) {
   if (
@@ -86,8 +88,7 @@ function parse (notation, timeOffset, timeSpan) {
     // node[2].data = [['2', 'a', 'a', 'a']]
     // -------------------------------------------------------------------------
     function setDataFromContent (i) {
-      const cleanWhitespaces = data => data.replace(/\s\s+/g, ' ').trim()
-      const tokenizeData = data => cleanWhitespaces(data).split(/\s/)
+      const tokenizeData = data => data.trim().split(/\s/)
       let depth = 0
       let data = ''
       nodes[i].data = []
@@ -128,12 +129,12 @@ function parse (notation, timeOffset, timeSpan) {
       function validateRatio (ratio) {
         const regex = new RegExp('^' + RATIO_TOKEN_VALIDATION_REGEX + '\\s$')
         if (!regex.test(ratio + ' ')) {
-          throw new Error('The notation ratio at index ' +
+          throw new Error(`The notation ratio '` + ratio + `' at index ` +
             nodes[i].startIndex + ' is malformed.')
         }
       }
       const ratio = nodes[i].data[0][0]
-      if (ratio !== '' && !isNaN(ratio.charAt(0))) {
+      if (ratio !== '' && ratio.match(/^[0-9]/)) {
         validateRatio(ratio)
         nodes[i].ratio = ratio
         nodes[i].data[0].shift()
@@ -283,7 +284,8 @@ function parse (notation, timeOffset, timeSpan) {
         }
       }
       const nodeTimeSpan = getParentEventTimeSpan(i) * nodes[i].ratioDenominator
-      nodes[i].eventTimeSpan = nodeTimeSpan / nodes[i].numDataTokens
+      const numDataTokens = nodes[i].numDataTokens !== 0 ? nodes[i].numDataTokens : 1
+      nodes[i].eventTimeSpan = nodeTimeSpan / numDataTokens
     }
 
     // -------------------------------------------------------------------------
@@ -296,14 +298,20 @@ function parse (notation, timeOffset, timeSpan) {
     let timeNeedle = 0
     function renderNodeEventsOfNextDataChunk (i) {
       if (nodes[i].data.length > 0) {
-        for (let n = 0, len = nodes[i].data[0].length; n < len; n++) {
-          const data = nodes[i].data[0][n]
-          if (data !== '') {
-            addEvent(timeNeedle, data)
-            timeNeedle += nodes[i].eventTimeSpan
+        if (nodes[i].numDataTokens === 0) {
+          timeNeedle += nodes[i].eventTimeSpan
+        } else {
+          for (let n = 0, len = nodes[i].data[0].length; n < len; n++) {
+            const data = nodes[i].data[0][n]
+            if (data !== '') {
+              if (nodes[i].ratioDenominator > 0) {
+                addEvent(timeNeedle, data)
+              }
+              timeNeedle += nodes[i].eventTimeSpan
+            }
           }
+          nodes[i].data.shift()
         }
-        nodes[i].data.shift()
       }
     }
 
@@ -382,6 +390,7 @@ module.exports = (notation, { timeOffset = 0, timeSpan = null } = {}) => {
   if (notation === '') {
     throw new Error('The notation is empty.')
   }
+  notation = cleanWhitespaces(notation)
   validateRootNodeDelimiters(notation)
   validateDescendantNodeDelimiters(notation)
   return parse(notation, timeOffset, timeSpan)
