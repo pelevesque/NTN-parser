@@ -1,6 +1,6 @@
 # Language Names
 
-Agi, Miranda, Aria, Milo, Ulil, Dasha, Dimo, Feni, Fela, Lusianna, Ismi
+Agi, Miranda, Aria, Milo, Ulil, Dasha, Dimo, Feni, Fela, Lusianna, Ismi, Arige
 
 # Features
 
