@@ -10,6 +10,7 @@ const RATIO_NUMBERS_SEPARATOR = ':'
 const EVENTS_TERMINATOR = '$'
 const DATA_TOKEN_VALIDATION_REGEX = '[a-zA-Z_\\.\\-][0-9a-zA-Z_\\.\\-]*'
 const RATIO_TOKEN_VALIDATION_REGEX = '(0|[1-9][0-9]*)(\\.[0-9]+)?(:(0|[1-9][0-9]*)(\\.[0-9]+)?)?'
+const LABEL_VALIDATION_REGEX = '#[a-z]+'
 
 const cleanWhitespaces = str => str.replace(/\s\s+/g, ' ').trim()
 
@@ -386,11 +387,47 @@ function parse (notation, timeOffset, timeSpan) {
   return events
 }
 
+function preprocess (notation) {
+  console.log(notation)
+  const expressions = []
+  let expression = ''
+  let depth = 0
+  let startIndex, endIndex
+  for (let i = 0; i < notation.length; i++) {
+    const char = notation.charAt(i)
+    if (char === '(') {
+      depth++
+      if (depth === 1) {
+        startIndex = i
+      }
+    }
+    if (depth === 1) {
+      expression += char
+    }
+    if (char === ')') {
+      depth--
+      if (depth === 0) {
+        endIndex = i
+        const obj = {
+          startIndex: startIndex,
+          endIndex: endIndex,
+          expression: expression
+        }
+        expressions.push(obj)
+        expression = ''
+      }
+    }
+  }
+  console.log(expressions)
+  throw Error('die')
+}
+
 module.exports = (notation, { timeOffset = 0, timeSpan = null } = {}) => {
   if (notation === '') {
     throw new Error('The notation is empty.')
   }
   notation = cleanWhitespaces(notation)
+  notation = preprocess(notation)
   validateRootNodeDelimiters(notation)
   validateDescendantNodeDelimiters(notation)
   return parse(notation, timeOffset, timeSpan)

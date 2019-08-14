@@ -6,6 +6,26 @@ const parse = require('../index')
 const f = notation => () => parse(notation)
 
 describe('#parse()', () => {
+  it('should work with an insert label', () => {
+    const notation = `
+      (a b #c d)
+      #c (ca cb)
+    `
+    const result = parse(notation)
+    const expected = [
+      { time: 0, data: 'a' },
+      { time: 0.25, data: 'b' },
+      { time: 0.5, data: 'ca' },
+      { time: 0.625, data: 'cb' },
+      { time: 0.75, data: 'd' },
+      { time: 1, data: '$' }
+    ]
+    expect(JSON.stringify(result)).to.equal(JSON.stringify(expected))
+  })
+})
+
+/*
+describe('#parse()', () => {
   describe('errors', () => {
     it('should throw an error when the notation is empty', () => {
       const notation = ''
@@ -413,3 +433,4 @@ describe('#parse()', () => {
     })
   })
 })
+*/
