@@ -7,133 +7,119 @@ const f = notation => () => parse(notation)
 
 describe('#parse()', () => {
   describe('label', () => {
-    it('should throw an error when a label is malformed', () => {
-      const notations = [
-        { index: 11, label: '123', notation: '(a b #c d) 123 (ca cb)' },
-        { index: 11, label: 'bee', notation: '(a b #c d) bee (ca cb)' },
-      ]
-      notations.forEach((e) => {
-        expect(f(e.notation)).to.throw(`The notation label '` + e.label +
-          `' at index ` + e.index + ' is malformed.')
+    describe('errors', () => {
+      it('should throw an error when a label outside a node is malformed', () => {
+        const notations = [
+          { index: 0, label: '123', notation: '123 (e f) (a b c d)' },
+          { index: 0, label: 'bee', notation: 'bee (e f) (a b c d)' }
+        ]
+        notations.forEach((e) => {
+          expect(f(e.notation)).to.throw(`The notation label '` + e.label +
+            `' at index ` + e.index + ' is malformed.')
+        })
+      })
+
+      it('should throw an error when a label is not followed by a node', () => {
+        const notations = [
+          { index: 0, label: '@a', notation: '@a @b (e f) (a b c d)' }
+        ]
+        notations.forEach((e) => {
+          expect(f(e.notation)).to.throw(`The notation label '` + e.label +
+            `' at index ` + e.index + ' must be followed by a node.')
+        })
+      })
+
+      it('should throw an error when the label inside a node is malformed.', () => {
+        const notations = [
+          { label: '@c:', notation: '@a (ca cb) (a b @c: d)' }
+        ]
+        notations.forEach((e) => {
+          expect(f(e.notation)).to.throw(`The notation label '` + e.label + `' is malformed.`)
+        })
+      })
+
+      it('should throw an error when a label is not defined', () => {
+        const notations = [
+          { label: '@c', notation: '@a (ca cb) (a b @c d)' }
+        ]
+        notations.forEach((e) => {
+          expect(f(e.notation)).to.throw(`The notation label '` + e.label + `' is not defined.`)
+        })
+      })
+
+      it('should throw an error when a label is defined multiple times', () => {
+        const notations = [
+          { label: '@a', notation: '@a (a) @a (a) (a b @a d)' }
+        ]
+        notations.forEach((e) => {
+          expect(f(e.notation)).to.throw(`The notation label '` + e.label + `' is defined multiple times.`)
+        })
       })
     })
 
-    it('should throw an error when a label is not followed by a node', () => {
-      const notations = [
-        { index: 11, label: '#a', notation: '(a b #c d) #a #b (ca cb)' },
-      ]
-      notations.forEach((e) => {
-        expect(f(e.notation)).to.throw(`The notation label '` + e.label +
-          `' at index ` + e.index + ' must be followed by a node.')
+    describe('substitution', () => {
+      it('should work with one shallow insert', () => {
+        const notation = '@c (ca cb) (a b @c d)'
+        const result = parse(notation)
+        const expected = [
+          { time: 0, data: 'a' },
+          { time: 0.25, data: 'b' },
+          { time: 0.5, data: 'ca' },
+          { time: 0.625, data: 'cb' },
+          { time: 0.75, data: 'd' },
+          { time: 1, data: '$' }
+        ]
+        expect(JSON.stringify(result)).to.equal(JSON.stringify(expected))
+      })
+
+      it('should work with one deep insert', () => {
+        const notation = '@c (ca cb) (a b (2 @c) d)'
+        const result = parse(notation)
+        const expected = [
+          { time: 0, data: 'a' },
+          { time: 0.2, data: 'b' },
+          { time: 0.4, data: 'ca' },
+          { time: 0.6000000000000001, data: 'cb' },
+          { time: 0.8, data: 'd' },
+          { time: 1, data: '$' }
+        ]
+        expect(JSON.stringify(result)).to.equal(JSON.stringify(expected))
+      })
+
+      it('should work with multiple shallow inserts', () => {
+        const notation = '@c (ca cb) @d (da db) @f (fa fb) (a b @c @d e @f)'
+        const result = parse(notation)
+        const expected = [
+          { time: 0, data: 'a' },
+          { time: 0.16666666666666666, data: 'b' },
+          { time: 0.3333333333333333, data: 'ca' },
+          { time: 0.41666666666666663, data: 'cb' },
+          { time: 0.49999999999999994, data: 'da' },
+          { time: 0.5833333333333333, data: 'db' },
+          { time: 0.6666666666666666, data: 'e' },
+          { time: 0.8333333333333333, data: 'fa' },
+          { time: 0.9166666666666666, data: 'fb' },
+          { time: 1, data: '$' }
+        ]
+        expect(JSON.stringify(result)).to.equal(JSON.stringify(expected))
+      })
+
+      it('should work with multiple shallow inserts one in another', () => {
+        const notation = '@dog (c c) @cat (b b @dog) (a a @cat a) '
+        const result = parse(notation)
+        const expected = [
+          { time: 0, data: 'a' },
+          { time: 0.25, data: 'a' },
+          { time: 0.5, data: 'b' },
+          { time: 0.5833333333333334, data: 'b' },
+          { time: 0.6666666666666667, data: 'c' },
+          { time: 0.7083333333333334, data: 'c' },
+          { time: 0.75, data: 'a' },
+          { time: 1, data: '$' }
+        ]
+        expect(JSON.stringify(result)).to.equal(JSON.stringify(expected))
       })
     })
-
-    it('should throw an error when the label is malformed.', () => {
-      const notations = [
-        { label: '#c:', notation: '(a b #c: d) #a (ca cb)' },
-      ]
-      notations.forEach((e) => {
-        expect(f(e.notation)).to.throw(`The notation label '` + e.label + `' is malformed.`)
-      })
-    })
-
-    it('should throw an error when a label is not defined', () => {
-      const notations = [
-        { label: '#c', notation: '(a b #c d) #a (ca cb)' },
-      ]
-      notations.forEach((e) => {
-        expect(f(e.notation)).to.throw(`The notation label '` + e.label + `' is not defined.`)
-      })
-    })
-
-    it('should throw an error when a label is defined multiple times', () => {
-      const notations = [
-        { label: '#a', notation: '(a b #a d) #a (a) #a (a)' },
-      ]
-      notations.forEach((e) => {
-        expect(f(e.notation)).to.throw(`The notation label '` + e.label + `' is defined multiple times.`)
-      })
-    })
-
-    it('should work with one vanilla label insert', () => {
-      const notation = '(a b #c d) #c (ca cb)'
-      const result = parse(notation)
-      const expected = [
-        { time: 0, data: 'a' },
-        { time: 0.25, data: 'b' },
-        { time: 0.5, data: 'ca' },
-        { time: 0.625, data: 'cb' },
-        { time: 0.75, data: 'd' },
-        { time: 1, data: '$' }
-      ]
-      expect(JSON.stringify(result)).to.equal(JSON.stringify(expected))
-    })
-
-    it('should work with one fancy label insert', () => {
-      const notation = '(a b (2 #c) d) #c (ca cb)'
-      const result = parse(notation)
-      const expected = [
-        { time: 0, data: 'a' },
-        { time: 0.2, data: 'b' },
-        { time: 0.4, data: 'ca' },
-        { time: 0.6000000000000001, data: 'cb' },
-        { time: 0.8, data: 'd' },
-        { time: 1, data: '$' }
-      ]
-      expect(JSON.stringify(result)).to.equal(JSON.stringify(expected))
-    })
-
-    it('should work with multiple vanilla inserts in one node', () => {
-      const notation = '(a b #c #d e #f) #c (ca cb) #d (da db) #f (fa fb)'
-      const result = parse(notation)
-      const expected = [
-        { time: 0, data: 'a' },
-        { time: 0.16666666666666666, data: 'b' },
-        { time: 0.3333333333333333, data: 'ca' },
-        { time: 0.41666666666666663, data: 'cb' },
-        { time: 0.49999999999999994, data: 'da' },
-        { time: 0.5833333333333333, data: 'db' },
-        { time: 0.6666666666666666, data: 'e' },
-        { time: 0.8333333333333333, data: 'fa' },
-        { time: 0.9166666666666666, data: 'fb' },
-        { time: 1, data: '$' }
-      ]
-      expect(JSON.stringify(result)).to.equal(JSON.stringify(expected))
-    })
-
-    it('should work with multiple vanilla inserts in different nodes in one order', () => {
-      const notation = '(a a #cat a) #cat (b b #dog) #dog (c c)'
-      const result = parse(notation)
-      const expected = [
-        { time: 0, data: 'a' },
-        { time: 0.25, data: 'a' },
-        { time: 0.5, data: 'b' },
-        { time: 0.5833333333333334, data: 'b' },
-        { time: 0.6666666666666667, data: 'c' },
-        { time: 0.7083333333333334, data: 'c' },
-        { time: 0.75, data: 'a' },
-        { time: 1, data: '$' }
-      ]
-      expect(JSON.stringify(result)).to.equal(JSON.stringify(expected))
-    })
-
-    it('should work with multiple vanilla inserts in mixed up order', () => {
-      const notation = '(a a #dog a) #cat (b b #dog) #dog (c c #cat)'
-      const result = parse(notation)
-      const expected = [
-        { time: 0, data: 'a' },
-        { time: 0.25, data: 'a' },
-        { time: 0.5, data: 'b' },
-        { time: 0.5833333333333334, data: 'b' },
-        { time: 0.6666666666666667, data: 'c' },
-        { time: 0.7083333333333334, data: 'c' },
-        { time: 0.75, data: 'a' },
-        { time: 1, data: '$' }
-      ]
-      expect(JSON.stringify(result)).to.equal(JSON.stringify(expected))
-    })
-    // make a very complex example of the above (have it recursive) labels nested in other labels
-    // make an throwing of an error when an infinite loop is found
   })
 
   describe('errors', () => {

@@ -10,7 +10,7 @@ const RATIO_NUMBERS_SEPARATOR = ':'
 const EVENTS_TERMINATOR = '$'
 const DATA_TOKEN_VALIDATION_REGEX = '[a-zA-Z_\\.\\-][0-9a-zA-Z_\\.\\-]*'
 const RATIO_TOKEN_VALIDATION_REGEX = '(0|[1-9][0-9]*)(\\.[0-9]+)?(:(0|[1-9][0-9]*)(\\.[0-9]+)?)?' // This permits .000000 (should we force a number > 0 at the end...)
-const LABEL_PREFIX = '#'
+const LABEL_PREFIX = '@'
 const LABEL_VALIDATION_REGEX = LABEL_PREFIX + '[a-z]+'
 
 const cleanWhitespaces = str => str.replace(/\s\s+/g, ' ').trim()
@@ -473,16 +473,15 @@ function preprocess (notation) {
     }
   }
 
-  for (let i = tokens.length - 1; i >= 0; i--) {
+  for (let i = 1, len = tokens.length; i < len; i++) { // start at one since no labels exist before that.
     if (tokens[i].type === 'node') {
-      const regex = /(?<=\s)#[^\(\)\s]*/g // regex for a label put somewhere else
-      const token = tokens[i].token
+      const regex = /(?<=\s)@[^()\s]*/g // regex for a label, put it somewhere else
       const matches = tokens[i].token.match(regex)
       if (matches) {
         for (let j = 0; j < matches.length; j++) {
           validateLabelInNode(matches[j])
           let index = null
-          for (let k = 0; k < tokens.length - 1; k++) {
+          for (let k = 0; k < i; k++) { // only search labels that come before the current node
             if (tokens[k].token.localeCompare(matches[j]) === 0) {
               index = k + 1
             }
@@ -497,7 +496,7 @@ function preprocess (notation) {
     }
   }
 
-  return (tokens.length > 0) ? tokens[0].token : notation
+  return (tokens.length > 0) ? tokens[tokens.length - 1].token : notation
 }
 // -----------------------------------------------------------------------------
 // -----------------------------------------------------------------------------
