@@ -475,7 +475,7 @@ function preprocess (notation) {
 
   for (let i = 1, len = tokens.length; i < len; i++) { // start at one since no labels exist before that.
     if (tokens[i].type === 'node') {
-      const regex = /(?<=\s)@[^()\s]*/g // regex for a label, put it somewhere else
+      const regex = /(?<=\s)@[^()\s]*/g // regex for a label, put it somewhere else (not dry)
       const matches = tokens[i].token.match(regex)
       if (matches) {
         for (let j = 0; j < matches.length; j++) {
